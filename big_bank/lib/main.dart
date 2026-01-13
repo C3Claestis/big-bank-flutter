@@ -1,4 +1,5 @@
-import 'package:big_bank/page/sigin_page.dart';
+import 'package:big_bank/page/signin_page.dart';
+import 'package:big_bank/page/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,9 +12,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SiginPage(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,      
+      initialRoute: AppRoutes.signIn,
+      routes: {
+        AppRoutes.signIn: (context) => const SigninPage(),
+        AppRoutes.signUp: (context) => const SignupPage(),
+      },
     );
   }
+}
+
+class AppRoutes {
+  static const signIn = '/sign-in';
+  static const signUp = '/sign-up';
 }

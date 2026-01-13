@@ -1,3 +1,4 @@
+import 'package:big_bank/main.dart';
 import 'package:big_bank/theme/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,8 +11,8 @@ final passwordObscureProvider = StateProvider<bool>((ref) => true);
 final emailProvider = StateProvider<String>((ref) => '');
 final passwordProvider = StateProvider<String>((ref) => '');
 
-class SiginPage extends ConsumerWidget {
-  const SiginPage({super.key});
+class SigninPage extends ConsumerWidget {
+  const SigninPage({super.key});
 
   bool _isValidEmail(String email) {
     final regex =
@@ -198,7 +199,7 @@ class SiginPage extends ConsumerWidget {
                 const Gap(24),
                  /// 🔘 SIGN IN BUTTON
                 Opacity(
-                  opacity: isFormValid ? 1.0 : 0.25,
+                  opacity: isFormValid ? 1.0 : 0.5,
                   child: SizedBox(
                     width: double.infinity,
                     height: 44,
@@ -211,7 +212,7 @@ class SiginPage extends ConsumerWidget {
                       ),
                       onPressed: isFormValid
                           ? () {
-                              // LOGIN ACTION
+                              
                             }
                           : null,
                       child: Text(
@@ -246,7 +247,9 @@ class SiginPage extends ConsumerWidget {
                       color: Appcolors.darkgray,
                     ),),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.signUp);
+                      },
                       child: Text(
                         'Sign Up',
                         style: GoogleFonts.poppins(
@@ -269,6 +272,7 @@ class SiginPage extends ConsumerWidget {
   AppBar _appbar() {
     return AppBar(
       backgroundColor: Appcolors.indigo,
+      automaticallyImplyLeading: false, // ❌ matikan back button
       elevation: 0,
       title: Row(
         children: [
