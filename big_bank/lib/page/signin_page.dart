@@ -15,8 +15,7 @@ class SigninPage extends ConsumerWidget {
   const SigninPage({super.key});
 
   bool _isValidEmail(String email) {
-    final regex =
-        RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return regex.hasMatch(email);
   }
 
@@ -26,11 +25,9 @@ class SigninPage extends ConsumerWidget {
     final email = ref.watch(emailProvider);
     final password = ref.watch(passwordProvider);
 
-    
     final isEmailValid = email.isEmpty || _isValidEmail(email);
     final isFormValid =
         email.isNotEmpty && password.isNotEmpty && _isValidEmail(email);
-
 
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(16),
@@ -39,7 +36,7 @@ class SigninPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Appcolors.indigo,
-      appBar: _appbar(),
+      appBar: _appbar(context),
       body: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: Container(
@@ -126,7 +123,7 @@ class SigninPage extends ConsumerWidget {
 
                 const Gap(32),
 
-               /// 📧 EMAIL
+                /// 📧 EMAIL
                 TextField(
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
@@ -134,8 +131,9 @@ class SigninPage extends ConsumerWidget {
                   },
                   decoration: InputDecoration(
                     labelText: 'Email',
-                    errorText:
-                        isEmailValid ? null : 'Email format is not valid',
+                    errorText: isEmailValid
+                        ? null
+                        : 'Email format is not valid',
                     labelStyle: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -145,7 +143,6 @@ class SigninPage extends ConsumerWidget {
                     focusedBorder: border,
                   ),
                 ),
-
 
                 const Gap(20),
 
@@ -170,9 +167,8 @@ class SigninPage extends ConsumerWidget {
                         color: Appcolors.lightgray,
                       ),
                       onPressed: () {
-                        ref
-                            .read(passwordObscureProvider.notifier)
-                            .state = !obscure;
+                        ref.read(passwordObscureProvider.notifier).state =
+                            !obscure;
                       },
                     ),
                   ),
@@ -182,10 +178,15 @@ class SigninPage extends ConsumerWidget {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     style: TextButton.styleFrom(
+                      shadowColor: Colors.transparent,
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: Colors.transparent,
                       padding: EdgeInsets.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/forgot-password');
+                    },
                     child: Text(
                       'Forgot your password ?',
                       style: GoogleFonts.poppins(
@@ -195,9 +196,10 @@ class SigninPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                ),                
+                ),
                 const Gap(24),
-                 /// 🔘 SIGN IN BUTTON
+
+                /// 🔘 SIGN IN BUTTON
                 Opacity(
                   opacity: isFormValid ? 1.0 : 0.5,
                   child: SizedBox(
@@ -210,11 +212,7 @@ class SigninPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      onPressed: isFormValid
-                          ? () {
-                              
-                            }
-                          : null,
+                      onPressed: isFormValid ? () {} : null,
                       child: Text(
                         'Sign In',
                         style: GoogleFonts.poppins(
@@ -237,15 +235,18 @@ class SigninPage extends ConsumerWidget {
                       height: 64,
                     ),
                   ),
-                ),                
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account? ", style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Appcolors.darkgray,
-                    ),),
+                    Text(
+                      "Don't have an account? ",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Appcolors.darkgray,
+                      ),
+                    ),
                     TextButton(
                       onPressed: () {
                         Navigator.pushNamed(context, AppRoutes.signUp);
@@ -269,20 +270,15 @@ class SigninPage extends ConsumerWidget {
     );
   }
 
-  AppBar _appbar() {
+  AppBar _appbar(BuildContext context) {
     return AppBar(
       backgroundColor: Appcolors.indigo,
-      automaticallyImplyLeading: false, // ❌ matikan back button
       elevation: 0,
+      automaticallyImplyLeading: false,
+      titleSpacing: 24, // jarak dari kiri layar
       title: Row(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 24),
-            child: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Appcolors.white,
-            ),
-          ),
+          Icon(Icons.arrow_back_ios_new_rounded, color: Appcolors.white),
           const Gap(10),
           Text(
             'Sign in',

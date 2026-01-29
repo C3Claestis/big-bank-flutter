@@ -44,7 +44,7 @@ class SignupPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Appcolors.indigo,
-      appBar: _appbar(),
+      appBar: _appbar(context),
       body: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: Container(
@@ -339,15 +339,16 @@ class SignupPage extends ConsumerWidget {
     );
   }
 
-  AppBar _appbar() {
+  AppBar _appbar(BuildContext context) {
     return AppBar(
       backgroundColor: Appcolors.indigo,
-      automaticallyImplyLeading: false, // ❌ matikan back button
       elevation: 0,
+      automaticallyImplyLeading: false,
+      titleSpacing: 24, // jarak dari kiri layar
       title: Row(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 24),
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
             child: Icon(
               Icons.arrow_back_ios_new_rounded,
               color: Appcolors.white,

@@ -1,3 +1,4 @@
+import 'package:big_bank/page/forgotPas_page.dart';
 import 'package:big_bank/page/signin_page.dart';
 import 'package:big_bank/page/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class MainApp extends StatelessWidget {
       routes: {
         AppRoutes.signIn: (context) => const SigninPage(),
         AppRoutes.signUp: (context) => const SignupPage(),
+        AppRoutes.forgotPassword: (context) => const ForgotPasPage(),
       },
     );
   }
@@ -26,4 +28,5 @@ class MainApp extends StatelessWidget {
 class AppRoutes {
   static const signIn = '/sign-in';
   static const signUp = '/sign-up';
+  static const forgotPassword = '/forgot-password';
 }
