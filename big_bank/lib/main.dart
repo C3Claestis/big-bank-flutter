@@ -1,4 +1,6 @@
+import 'package:big_bank/page/changepass_page.dart';
 import 'package:big_bank/page/forgotPas_page.dart';
+import 'package:big_bank/page/forgotpas_confirm_page.dart';
 import 'package:big_bank/page/signin_page.dart';
 import 'package:big_bank/page/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,8 @@ class MainApp extends StatelessWidget {
         AppRoutes.signIn: (context) => const SigninPage(),
         AppRoutes.signUp: (context) => const SignupPage(),
         AppRoutes.forgotPassword: (context) => const ForgotPasPage(),
+        AppRoutes.forgotPasConfirm: (context) => const ForgotpasConfirmPage(),
+        AppRoutes.changePassword: (context) => const ChangePassPage(),
       },
     );
   }
@@ -29,4 +33,6 @@ class AppRoutes {
   static const signIn = '/sign-in';
   static const signUp = '/sign-up';
   static const forgotPassword = '/forgot-password';
+  static const forgotPasConfirm = '/forgot-password-confirm';
+  static const changePassword = '/change-password';
 }

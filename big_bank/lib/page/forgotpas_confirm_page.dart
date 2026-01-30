@@ -8,12 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ForgotPasPage extends ConsumerWidget {
-  const ForgotPasPage({super.key});
+final codeProvider = StateProvider<String>((ref) => '');
+
+class ForgotpasConfirmPage extends ConsumerWidget {
+  const ForgotpasConfirmPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFormValid = ref.watch(numberProvider).isNotEmpty;
+    final isFormValid = ref.watch(codeProvider).isNotEmpty;
+    final number = ref.watch(numberProvider);
 
     return Scaffold(
       backgroundColor: Appcolors.white,
@@ -41,7 +44,7 @@ class ForgotPasPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Type your phone number',
+                  'Type a code',
                   style: GoogleFonts.poppins(
                     color: Appcolors.gray,
                     fontSize: 12,
@@ -49,17 +52,69 @@ class ForgotPasPage extends ConsumerWidget {
                   ),
                 ),
                 const Gap(16),
-                _inputNumber(ref, isform: isFormValid),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(child: _inputNumber(ref, isform: isFormValid)),
+                    const Gap(12),
+                    TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        backgroundColor: Appcolors.indigo,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Resend',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Appcolors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const Gap(24),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            'We texted you a code to verify your\nphone number',
+                        style: GoogleFonts.poppins(
+                          color: Appcolors.gray,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' (+62) $number',
+                        style: GoogleFonts.poppins(
+                          color: Appcolors.indigo,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Gap(10),
                 Text(
-                  'We texted you a code to verify your \nphone number',
+                  'This code will expired 10 minutes after this \nmessage. If you don\'t get a message.',
                   style: GoogleFonts.poppins(
-                    color: Appcolors.darkgray,
+                    color: Appcolors.gray,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Gap(24),
+                const Gap(32),
 
                 /// 🔘 SIGN IN BUTTON
                 Opacity(
@@ -74,12 +129,16 @@ class ForgotPasPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      onPressed: isFormValid ? () {
-                        Navigator.pushNamed(
-                            context, AppRoutes.forgotPasConfirm);
-                      } : null,
+                      onPressed: isFormValid
+                          ? () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.changePassword,
+                              );
+                            }
+                          : null,
                       child: Text(
-                        'Send',
+                        'Change Password',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -97,10 +156,8 @@ class ForgotPasPage extends ConsumerWidget {
     );
   }
 
-  TextField _inputNumber(WidgetRef ref, {bool isform = true}) {
-    return TextField(
-      onChanged: (value) => ref.read(numberProvider.notifier).state = value,
-      keyboardType: TextInputType.phone,
+  InputDecorator _inputNumber(WidgetRef ref, {bool isform = true}) {
+    return InputDecorator(
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -114,18 +171,14 @@ class ForgotPasPage extends ConsumerWidget {
           borderSide: BorderSide(color: Appcolors.lightgray, width: 1),
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 12, right: 8, top: 14),
-          child: Text(
-            '(+62) ',
-            style: GoogleFonts.poppins(
-              color: (isform ? Appcolors.darkgray : Appcolors.lightgray),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+      ),
+      child: TextField(
+        onChanged: (value) => ref.read(codeProvider.notifier).state = value,
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          isCollapsed: true,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }

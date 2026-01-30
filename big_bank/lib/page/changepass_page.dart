@@ -8,12 +8,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ForgotPasPage extends ConsumerWidget {
-  const ForgotPasPage({super.key});
+class ChangePassPage extends ConsumerWidget {
+  const ChangePassPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFormValid = ref.watch(numberProvider).isNotEmpty;
+    final pass1 = ref.watch(password1Provider);
+    final pass2 = ref.watch(password2Provider);
+    final isVisible = ref.watch(showPasswordProvider);
+
+    // tombol aktif hanya jika dua field terisi dan sama
+    final isFormValid =
+        pass1.isNotEmpty && pass2.isNotEmpty && pass1 == pass2;
 
     return Scaffold(
       backgroundColor: Appcolors.white,
@@ -41,27 +47,39 @@ class ForgotPasPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Type your phone number',
+                  'Type your new password',
                   style: GoogleFonts.poppins(
                     color: Appcolors.gray,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Gap(16),
-                _inputNumber(ref, isform: isFormValid),
-                const Gap(24),
-                Text(
-                  'We texted you a code to verify your \nphone number',
-                  style: GoogleFonts.poppins(
-                    color: Appcolors.darkgray,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
+                const Gap(8),
+                _inputPassword(
+                  ref: ref,
+                  isVisible: isVisible,
+                  onChanged: (v) =>
+                      ref.read(password1Provider.notifier).state = v,
                 ),
                 const Gap(24),
+                Text(
+                  'Confirm your password',
+                  style: GoogleFonts.poppins(
+                    color: Appcolors.gray,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Gap(8),
+                _inputPassword(
+                  ref: ref,
+                  isVisible: isVisible,
+                  onChanged: (v) =>
+                      ref.read(password2Provider.notifier).state = v,
+                ),
+                const Gap(32),
 
-                /// 🔘 SIGN IN BUTTON
+                /// 🔘 BUTTON
                 Opacity(
                   opacity: isFormValid ? 1.0 : 0.5,
                   child: SizedBox(
@@ -74,12 +92,22 @@ class ForgotPasPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      onPressed: isFormValid ? () {
-                        Navigator.pushNamed(
-                            context, AppRoutes.forgotPasConfirm);
-                      } : null,
+                      onPressed: isFormValid
+                          ? () {
+                              // reset state setelah sukses
+                              ref.read(password1Provider.notifier).state = '';
+                              ref.read(password2Provider.notifier).state = '';
+                              ref.read(showPasswordProvider.notifier).state =
+                                  false;
+
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.forgotPasConfirm,
+                              );
+                            }
+                          : null,
                       child: Text(
-                        'Send',
+                        'Change Password',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -97,35 +125,43 @@ class ForgotPasPage extends ConsumerWidget {
     );
   }
 
-  TextField _inputNumber(WidgetRef ref, {bool isform = true}) {
+  Widget _inputPassword({
+    required WidgetRef ref,
+    required bool isVisible,
+    required ValueChanged<String> onChanged,
+  }) {
     return TextField(
-      onChanged: (value) => ref.read(numberProvider.notifier).state = value,
-      keyboardType: TextInputType.phone,
+      obscureText: !isVisible,
+      onChanged: onChanged,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
             color: Appcolors.lightgray.withOpacity(0.5),
-            width: 1, // ← ketebalan muncul
+            width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Appcolors.lightgray, width: 1),
         ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 12, right: 8, top: 14),
-          child: Text(
-            '(+62) ',
-            style: GoogleFonts.poppins(
-              color: (isform ? Appcolors.darkgray : Appcolors.lightgray),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        suffixIcon: IconButton(
+          onPressed: () {
+            // satu tombol mengubah dua field sekaligus
+            ref.read(showPasswordProvider.notifier).state = !isVisible;
+          },
+          icon: Icon(
+            isVisible ? Icons.visibility : Icons.visibility_off,
+            color: Appcolors.darkgray,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
       ),
     );
   }
@@ -133,7 +169,7 @@ class ForgotPasPage extends ConsumerWidget {
   AppBar _appBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      titleSpacing: 24, // jarak dari kiri layar
+      titleSpacing: 24,
       backgroundColor: Appcolors.white,
       title: Row(
         children: [
@@ -147,7 +183,7 @@ class ForgotPasPage extends ConsumerWidget {
           ),
           const Gap(10),
           Text(
-            'Forgot Password',
+            'Change Password',
             style: GoogleFonts.poppins(
               color: Appcolors.darkgray,
               fontSize: 20,
