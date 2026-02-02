@@ -101,8 +101,9 @@ class ChangePassPage extends ConsumerWidget {
                                   false;
 
                               Navigator.pushNamed(
+                               
                                 context,
-                                AppRoutes.forgotPasConfirm,
+                                AppRoutes.changePassSuccess,
                               );
                             }
                           : null,

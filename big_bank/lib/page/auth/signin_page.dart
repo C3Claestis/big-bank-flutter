@@ -212,7 +212,11 @@ class SigninPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      onPressed: isFormValid ? () {} : null,
+                      onPressed: isFormValid
+                          ? () {
+                              Navigator.pushNamed(context, AppRoutes.homePage);
+                            }
+                          : null,
                       child: Text(
                         'Sign In',
                         style: GoogleFonts.poppins(
